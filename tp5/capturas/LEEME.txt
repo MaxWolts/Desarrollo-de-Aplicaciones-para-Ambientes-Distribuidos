@@ -1,0 +1,3 @@
+Guardar aca las capturas con estos nombres (son los que usa el README):
+- procesamiento.png -> consola mostrando el procesamiento de los mensajes (#001, #002, ... con sensores mezclados)
+- resultado.png     -> el final de la ejecucion con #500, el BECOME y el RESULTADO FINAL (VERIFICACION OK)
