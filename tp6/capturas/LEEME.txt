@@ -1,0 +1,4 @@
+Guardar aca las capturas con estos nombres (son los que usa el README):
+- servidor.png -> consola del servidor con la traza de conexiones y operaciones
+- cliente.png  -> menu del cliente usando las opciones 1, 2 y 3
+- fallo.png    -> opcion 4 (tarea larga) y el servidor cortado con Ctrl+C: UnmarshalException en el cliente
