@@ -1,0 +1,6 @@
+Las capturas muestran:
+- 1_cluster.png     -> "docker compose ps" y "docker exec api python pruebas.py estado" (PRIMARY + 2 SECONDARY)
+- 2_propagacion.png -> "docker exec api python pruebas.py propagacion 100"
+- 3_failover.png    -> "docker exec -it api python pruebas.py failover" mientras en otra terminal se hace "docker kill mongo1"
+                       (que se vean las FALLAS y el mensaje *** FAILOVER: nuevo primario ***)
+Extra opcional: "docker logs api" mostrando [INSERT] -> mongo1 y [FIND] -> mongo2/mongo3

@@ -1,0 +1,56 @@
+# Cluster MongoDB Replica Set (1 primario + 2 replicas) + backend Python
+services:
+
+  mongo1:
+    image: mongo:7
+    container_name: mongo1
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports: ["27017:27017"]
+    volumes: [mongo1_data:/data/db]
+    healthcheck: &salud
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mongo2:
+    image: mongo:7
+    container_name: mongo2
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports: ["27018:27017"]
+    volumes: [mongo2_data:/data/db]
+    healthcheck: *salud
+
+  mongo3:
+    image: mongo:7
+    container_name: mongo3
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports: ["27019:27017"]
+    volumes: [mongo3_data:/data/db]
+    healthcheck: *salud
+
+  # arma el Replica Set una vez que los 3 nodos estan arriba, y termina
+  init-replica:
+    build: ./backend
+    container_name: init-replica
+    command: ["python", "init_replica.py"]
+    depends_on:
+      mongo1: { condition: service_healthy }
+      mongo2: { condition: service_healthy }
+      mongo3: { condition: service_healthy }
+
+  # backend: API REST + scripts de prueba
+  api:
+    build: ./backend
+    container_name: api
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports: ["8000:8000"]
+    environment:
+      MONGO_URI: "mongodb://mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0"
+    depends_on:
+      init-replica: { condition: service_completed_successfully }
+
+volumes:
+  mongo1_data:
+  mongo2_data:
+  mongo3_data:
