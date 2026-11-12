@@ -1,0 +1,5 @@
+# la clave privada no se sube al repo
+servidor/certs/
+__pycache__/
+*.pyc
+.venv/

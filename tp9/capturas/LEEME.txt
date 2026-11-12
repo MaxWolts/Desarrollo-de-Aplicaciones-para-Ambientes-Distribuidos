@@ -1,0 +1,6 @@
+Las capturas muestran:
+- 1_login.png        -> opcion 1 (login max/max123): JSON con access_token + header/payload/firma
+- 2_acceso_ok.png    -> opcion 2: GET https://localhost:8443/productos con Authorization: Bearer -> 200 OK
+- 3_rechazo_401.png  -> opcion 4 (sin token) y/o opcion 6 (token expirado) -> 401 Unauthorized
+- 4_tampering.png    -> opcion 5: payload original vs alterado -> 401 "Firma invalida: el token fue alterado"
+Extra: la consola del servidor muestra [AUTH] 401 / 403 / token OK en cada peticion.
