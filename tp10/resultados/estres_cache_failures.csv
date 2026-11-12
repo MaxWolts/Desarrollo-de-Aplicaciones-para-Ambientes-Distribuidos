@@ -1,0 +1,4 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+GET,/productos,"ReadTimeout(ReadTimeoutError(""HTTPConnectionPool(host='localhost', port=8101): Read timed out. (read timeout=3)""))",639,2026-11-12T14:31:52Z,2026-11-12T14:33:25Z
+POST,/productos,"ReadTimeout(ReadTimeoutError(""HTTPConnectionPool(host='localhost', port=8101): Read timed out. (read timeout=3)""))",215,2026-11-12T14:31:52Z,2026-11-12T14:33:25Z
+GET,/productos/[id],"ReadTimeout(ReadTimeoutError(""HTTPConnectionPool(host='localhost', port=8101): Read timed out. (read timeout=3)""))",1230,2026-11-12T14:31:52Z,2026-11-12T14:33:25Z

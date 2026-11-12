@@ -1,0 +1,60 @@
+# Entorno de pruebas del TP10: el sistema del TP8 (MongoDB Replica Set + API)
+# con la API limitada a 0.5 CPU para encontrar el punto de quiebre.
+#   api       -> puerto 8100, version original (sin cache)
+#   api-cache -> puerto 8101, version con la mejora (cache de lecturas)
+services:
+
+  mongo1:
+    image: mongo:7
+    container_name: tp10-mongo1
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    healthcheck: &salud
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mongo2:
+    image: mongo:7
+    container_name: tp10-mongo2
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    healthcheck: *salud
+
+  mongo3:
+    image: mongo:7
+    container_name: tp10-mongo3
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    healthcheck: *salud
+
+  init-replica:
+    build: ./servicio
+    container_name: tp10-init
+    command: ["python", "init_replica.py"]
+    depends_on:
+      mongo1: { condition: service_healthy }
+      mongo2: { condition: service_healthy }
+      mongo3: { condition: service_healthy }
+
+  api:
+    build: ./servicio
+    container_name: tp10-api
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "warning"]
+    ports: ["8100:8000"]
+    environment:
+      CACHE_SEG: "0"
+    cpus: ${API_CPUS:-0.5}   # limite de CPU: medio nucleo (cambiar con la variable API_CPUS)
+    mem_limit: 512m    # limite de RAM
+    depends_on:
+      init-replica: { condition: service_completed_successfully }
+
+  api-cache:
+    build: ./servicio
+    container_name: tp10-api-cache
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "warning"]
+    ports: ["8101:8000"]
+    environment:
+      CACHE_SEG: "2"   # MEJORA: las lecturas se guardan 2 s en memoria
+    cpus: ${API_CPUS:-0.5}
+    mem_limit: 512m
+    depends_on:
+      init-replica: { condition: service_completed_successfully }

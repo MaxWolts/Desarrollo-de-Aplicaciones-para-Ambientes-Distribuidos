@@ -1,0 +1,6 @@
+
+- 1_locust_ejecucion.png -> interfaz web de Locust (http://localhost:8089) durante la prueba, pestaña Charts
+                            (graficos de RPS, tiempos de respuesta y cantidad de usuarios subiendo)
+- 2_locust_resumen.png   -> pestaña Statistics de Locust al terminar (o el resumen final en la terminal)
+- 3_recursos.png         -> "docker stats" (y/o el Administrador de tareas) en el pico (250-300 usuarios),
+                            mostrando la CPU de tp10-api cerca de su limite
